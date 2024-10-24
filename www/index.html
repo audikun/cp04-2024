@@ -94,7 +94,7 @@
     function clock(hour,minute,second,hide){
         var canvas = $('#mycanvas')[0];
         var ctx = canvas.getContext('2d');
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; 
+        ctx.fillStyle = 'rgba(0, 31, 91, 0.4)'; 
         ctx.fillRect(0,0,canvas.width,canvas.height);
         var cx = canvas.width/2;
         var cy = canvas.height/2;
@@ -105,7 +105,7 @@
         for(var i = 0; i < 60; i++) {
             var px = getX(cx,i/60,0.9);
             var py = getY(cy,i/60,0.9);
-            ctx.fillStyle = 'rgb(0, 255, 0)'; 
+            ctx.fillStyle = 'rgb(255, 255, 0)'; 
             ctx.beginPath();
             ctx.arc(px, py, 2, 0, Math.PI*2, false);
             ctx.fill();
@@ -116,7 +116,7 @@
             var py = getY(cy,i/12,0.9);
             ctx.fillStyle = 'rgb(255, 255, 0)'; 
             ctx.beginPath();
-            ctx.arc(px, py, 5, 0, Math.PI*2, false);
+            ctx.arc(px, py, 8, 0, Math.PI*2, false);
             ctx.fill();
         }
 
@@ -155,6 +155,8 @@
     var period = 0;
     var rest = 0;
     var etime = 0;
+    var audio = new Audio();
+    var img = new Image();
 
 
     
@@ -166,29 +168,39 @@
         
     }
 
+
     // Alarmの処理
     function alarm(){
         var canvas = $("#mycanvas")[0];
         var ctx = canvas.getContext("2d");
-        var img = new Image();
-        img.src = "ksuisbg.gif";
-        img.onload = function(){
-            ctx.drawImage(img,0,0,300,300);
-        };
-        var audio = new Audio();
-        audio.src = "pin.wav";
-        audio.play();
+    
+        if(rest>=0&&etime==0){
+            img.src = "neru.png";
+            img.onload = function(){
+                ctx.drawImage(img,0,0,350,350);
+            };
+        }else if(rest==0&&etime>0){
+            audio.src = "sanpo.mp3";
+            audio.play();
+            img.src = "kisyou.png";
+            img.onload = function(){
+                ctx.drawImage(img,0,0,350,350);
+            };
+        }
     }
     
     // ButtonAがクリックされた時の処理
     function btnAClick(e){
         active = true;
         startTime = new Date();
+        
     }
 
     // ButtonBがクリックされた時の処理
     function btnBClick(e){
+        alarm();
         active = false;
+        audio.pause();
         
         
     }
@@ -214,24 +226,22 @@
                 active = false;
                 alarm();
             }
-        }
-        
+        }  
     } 
 
   </script>
 </head>
 <body>
-    <canvas id="mycanvas" width="200" height="200">Test</canvas>
-
-    <div id="minuteStr">〇</div>
-    <div id="secondStr">〇</div>
+    <canvas id="mycanvas" width="350" height="350">Test</canvas>
+    <div id="minuteStr">★</div>
+    <div id="secondStr">★</div>
 
     <div id="remain">Remaining time</div>
     <div id="time">Time</div>
-    <button id="btnA">Start</button>  
-    <button id="btnB">Stop</button>  
-    <button id="btnC">Set</button>  
-    <input type="number" id="minute" value=0 >
-    <input type="number" id="second" value=15 >
+    <button id="btnA">起動/スタート</button>  
+    <button id="btnB">停止</button>  
+    <button id="btnC">タイムセット</button>  
+    <input type="number" id="minute" value=20 >
+    <input type="number" id="second" value=0 >
 </body>
 </html>
